@@ -11,10 +11,7 @@ import UIKit
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    var filteredImage: UIImage?
-    var originalImage: UIImage?
     var selectedFilter = ""
-    var filterFlag = false
     var modifier = 0
     
     @IBOutlet weak var contrast: UIButton!
@@ -31,7 +28,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var originalImageLabel: UILabel!
 
     
-    @IBOutlet weak var imageView: UIImageView!
+    //@IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var originalImageView: UIImageView!
     @IBOutlet weak var filteredImageview: UIImageView!
     
     @IBOutlet var bottomMenu: UIView!
@@ -42,8 +40,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        originalImage = nil
-        filteredImage = nil
         filterButton.enabled = false
         compareButton.enabled = false
         shareButton.enabled = false
@@ -92,7 +88,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if ((touches.first) != nil)  {
-            if(originalImage != nil){
+            if(originalImageView.image != nil){
                 if (!compareButton.selected) {
                     hideFilteredImageView()
                     showOriginalImageLabel()
@@ -106,7 +102,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if ((touches.first) != nil) {
-            if(filteredImage != nil){
+            if (filteredImageview.image != nil){
                 if (!compareButton.selected) {
                 showFilteredImageView()
                 hideOriginalImageLabel()
@@ -121,36 +117,36 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func filters(sender: UIButton) {
         
-        if (originalImage != nil){
+        if (originalImageView.image != nil){
             slider.enabled = false
             let tempImage = Filter()
-            tempImage.image = originalImage
+            tempImage.image = originalImageView.image
             filterActivityIndicator.startAnimating()
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                
+                var filteredImage : UIImage?
                 switch sender {
                 case self.contrast:
-                    self.filteredImage = tempImage.constrast(self.modifier).toUIImage()!
+                    filteredImage = tempImage.constrast(self.modifier).toUIImage()!
                     self.selectedFilter = "contrast"
                     self.sliderModifier(-25, max: 25)
                 case self.grayscale:
-                    self.filteredImage = tempImage.grayscale().toUIImage()!
+                    filteredImage = tempImage.grayscale().toUIImage()!
                     self.selectedFilter = "grayscale"
                 case self.brightness:
                     if (self.modifier != 0){
-                    self.filteredImage = tempImage.brightness(self.modifier).toUIImage()!
+                    filteredImage = tempImage.brightness(self.modifier).toUIImage()!
                     }
                     self.selectedFilter = "brightness"
                     self.sliderModifier(-50, max: 50)
                 case self.colorInversion:
-                    self.filteredImage = tempImage.colorInversion().toUIImage()!
+                    filteredImage = tempImage.colorInversion().toUIImage()!
                     self.selectedFilter = "colorInversion"
                 default: break
                 }
                 
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.filteredImageview.image = self.filteredImage
+                    self.filteredImageview.image = filteredImage
                     self.showFilteredImageView()
                     self.compareButton.enabled = true
                     self.shareButton.enabled = true
@@ -237,7 +233,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onShare(sender: UIButton) {
-        let activityController = UIActivityViewController(activityItems: [imageView.image!], applicationActivities: nil)
+        let activityController = UIActivityViewController(activityItems: [originalImageView.image!], applicationActivities: nil)
         self.presentViewController(activityController, animated: true, completion: nil)
     }
     
@@ -286,10 +282,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         dismissViewControllerAnimated(true, completion: nil)
         
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage{
-            originalImage = image
             filterButton.enabled = true
-            
-            filteredImage = nil
+            filteredImageview.image = nil
             shareButton.enabled = false
             compareButton.enabled = false
             editButton.enabled = false
@@ -304,7 +298,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             
             showOriginalImageLabel()
-            imageView.image = image
+            originalImageView.image = image
             filteredImageview.image = nil
         }
     }
@@ -319,7 +313,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
         UIGraphicsBeginImageContextWithOptions(self.contrast.frame.size, true, scale)
-        self.originalImage!.drawInRect(CGRect(origin: CGPointZero, size: self.contrast.frame.size))
+        //self.originalImage!.drawInRect(CGRect(origin: CGPointZero, size: self.contrast.frame.size))
+        self.originalImageView.image!.drawInRect(CGRect(origin: CGPointZero, size: self.contrast.frame.size))
         
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

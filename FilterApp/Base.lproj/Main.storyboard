@@ -173,8 +173,8 @@
                         <outlet property="filterButton" destination="wWt-b9-cGo" id="2Wt-Of-wBX"/>
                         <outlet property="filteredImageview" destination="AWO-vy-wXI" id="MXo-sb-I59"/>
                         <outlet property="grayscale" destination="oRD-Ec-5bQ" id="S54-i0-nrc"/>
-                        <outlet property="imageView" destination="taK-QU-4xy" id="EuG-9h-qVW"/>
                         <outlet property="originalImageLabel" destination="4hS-Gz-f6T" id="EfY-La-xQd"/>
+                        <outlet property="originalImageView" destination="taK-QU-4xy" id="NbF-Sn-eie"/>
                         <outlet property="secondaryMenu" destination="awU-jw-SRU" id="ThQ-BT-9la"/>
                         <outlet property="shareButton" destination="IqR-a9-w8b" id="KbB-n1-XMa"/>
                         <outlet property="slider" destination="rEY-iH-4p3" id="ErW-AK-nvS"/>
