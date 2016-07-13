@@ -123,7 +123,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             tempImage.image = originalImageView.image
             filterActivityIndicator.startAnimating()
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {[unowned self] in
                 var filteredImage : UIImage?
                 switch sender {
                 case self.contrast:
@@ -145,7 +145,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 default: break
                 }
                 
-                dispatch_async(dispatch_get_main_queue(), {
+                dispatch_async(dispatch_get_main_queue(), {[unowned self] in
                     self.filteredImageview.image = filteredImage
                     self.showFilteredImageView()
                     self.compareButton.enabled = true
@@ -322,23 +322,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let tempImage = Filter()
         tempImage.image = scaledImage
         
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
             let scaledFilteredImage = tempImage.constrast(self.modifier).toUIImage()!
             self.contrast.setImage(scaledFilteredImage, forState: UIControlState.Normal)
             self.contrast.backgroundColor = UIColor.clearColor()
         }
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
             let scaledFilteredImage = tempImage.grayscale().toUIImage()!
             self.grayscale.setImage(scaledFilteredImage, forState: UIControlState.Normal)
             
             self.grayscale.backgroundColor = UIColor.clearColor()
         }
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
             let scaledFilteredImage = tempImage.colorInversion().toUIImage()!
             self.colorInversion.setImage(scaledFilteredImage, forState: UIControlState.Normal)
             self.colorInversion.backgroundColor = UIColor.clearColor()
         }
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue()) {[unowned self] in
             let scaledFilteredImage = tempImage.brightness(self.modifier).toUIImage()!
             self.brightness.setImage(scaledFilteredImage, forState: UIControlState.Normal)
             self.brightness.backgroundColor = UIColor.clearColor()
